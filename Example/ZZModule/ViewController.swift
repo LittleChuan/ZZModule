@@ -7,18 +7,24 @@
 //
 
 import UIKit
+import ZZModule
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        ZZModule.register(AViewController.self)
+        ZZModule.register(NSClassFromString("ZZModule_Example.BViewController") as! ZZModuleProtocol.Type)
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func pushA(_ sender: Any) {
+        jump("zz://test/a?msg=AAA")
     }
-
+    
+    @IBAction func pushB(_ sender: Any) {
+        jump("zz://test.b")
+    }
 }
 
