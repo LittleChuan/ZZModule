@@ -1,11 +1,11 @@
 PODS:
-  - Nimble (7.3.4)
-  - Quick (1.2.0)
+  - Nimble (8.0.5)
+  - Quick (2.2.0)
   - ZZModule (0.1.0)
 
 DEPENDENCIES:
-  - Nimble (~> 7.0)
-  - Quick (~> 1.2.0)
+  - Nimble
+  - Quick
   - ZZModule (from `../`)
 
 SPEC REPOS:
@@ -18,10 +18,10 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
-  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  Nimble: 4ab1aeb9b45553c75b9687196b0fa0713170a332
+  Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
   ZZModule: 36d8e131f28e5319e71a3512390dec00ff89d446
 
-PODFILE CHECKSUM: 16f5863d9848d6a77ee262edfa4e8b9eab1ea885
+PODFILE CHECKSUM: ebe3e16a2a60d7f65f71ba57f5d078b385123a0a
 
 COCOAPODS: 1.8.4

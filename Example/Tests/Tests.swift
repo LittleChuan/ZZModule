@@ -4,46 +4,30 @@ import Quick
 import Nimble
 import ZZModule
 
-class TableOfContentsSpec: QuickSpec {
+class ModuleSpec: QuickSpec {
     override func spec() {
-        describe("these will fail") {
-
-            it("can do maths") {
-                expect(1) == 2
-            }
-
-            it("can read") {
-                expect("number") == "string"
-            }
-
-            it("will eventually fail") {
-                expect("time").toEventually( equal("done") )
+        describe("scheme convertable") {
+            it("without params") {
+                expect("zz://test/a".asScheme()?.0) == "zz://test/a"
             }
             
-            context("these will pass") {
+            it("with params") {
+                expect("zz://test/a?a=A".asScheme()?.0) == "zz://test/a"
+            }
+            
+            it("with params and get right param") {
+                expect("zz://test/a?a=A".asScheme()?.1?["a"] as? String) == "A"
+            }
+        }
+        
+        describe("register and load") {
 
-                it("can do maths") {
-                    expect(23) == 23
-                }
-
-                it("can read") {
-                    expect("🐮") == "🐮"
-                }
-
-                it("will eventually pass") {
-                    var time = "passing"
-
-                    DispatchQueue.main.async {
-                        time = "done"
-                    }
-
-                    waitUntil { done in
-                        Thread.sleep(forTimeInterval: 0.5)
-                        expect(time) == "done"
-
-                        done()
-                    }
-                }
+            it("can load AViewController") {
+                expect(ZZModule.object("zz://test/a")).notTo(beNil())
+            }
+            
+            it("can load BViewController") {
+                expect(ZZModule.object("zz://test/b")).notTo(beNil())
             }
         }
     }

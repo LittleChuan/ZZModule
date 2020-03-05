@@ -3,5 +3,7 @@
 <plist version="1.0">
 <array>
 	<string>ZZModule_Example.BViewController</string>
+	<string>CViewController</string>
+	<string>Target.Class</string>
 </array>
 </plist>

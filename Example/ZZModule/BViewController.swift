@@ -11,7 +11,7 @@ import ZZModule
 
 class BViewController: UIViewController, ZZModuleViewControllerProtocol {
     static var scheme: String {
-        "zz://test.b"
+        "zz://test/b"
     }
 
     override func viewDidLoad() {

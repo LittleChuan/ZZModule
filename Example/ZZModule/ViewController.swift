@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         ZZModule.register(AViewController.self)
-        ZZModule.register(NSClassFromString("ZZModule_Example.BViewController") as! ZZModuleProtocol.Type)
+//        ZZModule.register(NSClassFromString("ZZModule_Example.BViewController") as! ZZModuleProtocol.Type)
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -24,7 +24,12 @@ class ViewController: UIViewController {
     }
     
     @IBAction func pushB(_ sender: Any) {
-        jump("zz://test.b")
+        jump("zz://test/b")
+    }
+    
+    @IBAction func pushC(_ sender: Any) {
+        // TODO: not work for OC
+        jump("zz://test/c")
     }
 }
 

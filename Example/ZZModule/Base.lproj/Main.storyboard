@@ -49,10 +49,19 @@
                                     <action selector="pushB:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="xPX-mS-SHV"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="taX-6o-BRQ">
+                                <rect key="frame" x="163" y="414.5" width="49" height="30"/>
+                                <state key="normal" title="Push C"/>
+                                <connections>
+                                    <action selector="pushC:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="83q-CA-5p2"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="taX-6o-BRQ" firstAttribute="top" secondItem="GQy-2O-tjx" secondAttribute="bottom" constant="18" id="0Rd-dh-MUb"/>
                             <constraint firstItem="GQy-2O-tjx" firstAttribute="centerX" secondItem="pVS-Jr-1uD" secondAttribute="centerX" id="LJ2-Qx-J6w"/>
+                            <constraint firstItem="taX-6o-BRQ" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="W3S-OD-pzN"/>
                             <constraint firstItem="pVS-Jr-1uD" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="b9i-a0-uhh"/>
                             <constraint firstItem="pVS-Jr-1uD" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="pQk-gj-x3d"/>
                             <constraint firstItem="GQy-2O-tjx" firstAttribute="top" secondItem="pVS-Jr-1uD" secondAttribute="bottom" constant="18" id="xl9-xu-RAF"/>

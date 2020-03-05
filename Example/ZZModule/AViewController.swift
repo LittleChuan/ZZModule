@@ -9,16 +9,7 @@
 import UIKit
 import ZZModule
 
-class AViewController: UIViewController, ZZModuleViewControllerProtocol {
-    func fillParams(_ params: ZZModuleParams) {
-        if let params = params, let newMsg = params["msg"] as? String {
-            msg = newMsg
-        }
-    }
-    
-    static var scheme: String {
-        "zz://test/a?hhh=aaa"
-    }
+class AViewController: UIViewController {
     
     var msg = "ddd"
     
@@ -29,6 +20,17 @@ class AViewController: UIViewController, ZZModuleViewControllerProtocol {
         
         print(msg)
     }
-    
 
+}
+
+extension AViewController: ZZModuleViewControllerProtocol {
+    func fillParams(_ params: ZZModuleParams) {
+        if let params = params, let newMsg = params["msg"] as? String {
+            msg = newMsg
+        }
+    }
+    
+    static var scheme: String {
+        "zz://test/a?hhh=aaa"
+    }
 }

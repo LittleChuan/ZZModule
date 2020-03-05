@@ -19,13 +19,13 @@ public extension ZZModuleProtocol {
     func fillParams(_ params: ZZModuleParams) { }
 }
 
-public class ZZModule {
+public class ZZModule: NSObject {
     
     public static let shared = ZZModule()
     
     private let queue = DispatchQueue(label: "ZZModule")
     
-    private var schemeDic = [String: ZZModuleProtocol.Type]()
+    private var schemeDic = [String: NSObject.Type]()
     
     public static func register(_ cls: ZZModuleProtocol.Type) {
         shared.queue.async {
@@ -44,12 +44,33 @@ public class ZZModule {
     }
     
     public static func object(_ scheme: SchemeConvertible) -> NSObject? {
-        if let (schemeString, params) = scheme.asScheme(), let cls = shared.schemeDic[schemeString] {
-            let obj = cls.init()
-            obj.fillParams(params)
-            return obj
+        if let (schemeString, params) = scheme.asScheme() {
+            if let cls = shared.schemeDic[schemeString] as? ZZModuleProtocol.Type {
+                let obj = cls.init()
+                obj.fillParams(params)
+                return obj
+            }
         }
         return nil
+    }
+    
+    @objc public static func loadPlist(_ plist: String?) {
+        let file = plist ?? "ZZModule"
+        guard let filePath = Bundle.main.path(forResource: file, ofType:"plist"),
+        let schemeList = NSArray(contentsOfFile: filePath) as? [String] else {
+            return
+        }
+        for scheme in schemeList {
+            if let cls = NSClassFromString(scheme) as? ZZModuleProtocol.Type {
+                register(cls)
+            }
+        }
+    }
+    
+    @objc public static func registerOC(scheme: String, cls: NSObject.Type) {
+        shared.queue.async {
+            shared.schemeDic[scheme] = cls
+        }
     }
 }
 
@@ -69,6 +90,6 @@ extension String: SchemeConvertible {
             query, queryItem in
             query[queryItem.name] = queryItem.value
         }
-        return (scheme + host + url.path, params)
+        return (scheme + "://" + host + url.path, params)
     }
 }
