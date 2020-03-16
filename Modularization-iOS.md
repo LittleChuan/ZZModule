@@ -4,15 +4,15 @@
 
 #### 什么是模块化开发？
 
-**模块（Module）**的意思个人理解为一些相关性较高功能的集合，模块化的本质即是将工程切割成为一个个独立的模块，使其内部业务能够自洽，对外部有方法进行通信。
+``模块（Module）``的意思个人理解为一些相关性较高功能的集合，模块化的本质即是将工程切割成为一个个独立的模块，使其内部业务能够自洽，对外部有方法进行通信。
 
-其实无论是叫组件化还是模块化，都是基于模块的概念对工程进行修整，我认为**组件（Component）**的粒度更小，更加偏向功能性，比如一个可以循环滚动的活动展示Banner。而模块的粒度大，偏向逻辑性，更适合业务集合的表述。
+其实无论是叫组件化还是模块化，都是基于模块的概念对工程进行修整，我认为``组件（Component）``的粒度更小，更加偏向功能性，比如一个可以循环滚动的活动展示Banner。而模块的粒度大，偏向逻辑性，更适合业务集合的表述。
 
 #### 为什么要做模块化？
 
 基于日益复杂的APP开发，APP的页面数都在两位数，所实现的业务数量也不少，大量的代码相互引用造成耦合，对于持续的开发和维护造成了不小的影响。所以业务模块的设计变得尤为重要。模块化的价值在于分治，将庞大的APP代码仓库分而治之。
 
-这里有张模块引用的图。
+这里有张模块引用的图（不是没画，需要想象一下）。
 
 所以具体有哪些好处呢？以下是我个人认为突出的几大优势：
 
@@ -206,19 +206,48 @@ id< HomeServiceProtocol > homeVc = [[BeeHive shareInstance] createService:@proto
 | target-selector | 无需注册和额外存储映射关系，解决了字符串问题 |
 | protocol        | 减少了额外代码，增加了存储，解决了字符串问题 |
 
-感觉需求的不同，可以选择不同的方案，或者同时使用也是可以的。
-
 ### 1.4 其他
 
 #### 1.4.1 系统事件
+
+模块化工程可以单独建立一个处理应用推送和打开APP连接的模块，这样就需要模块接受APP系统事件的能力。
 
 ``BeeHive``的``Module``提供了系统事件，以此让模块可以获取APP的生命周期以及系统事件。
 
 使用``NSNotificationCenter``方式也可以获取系统事件，也是个实现思路吧。
 
-#### 1.4.2 持续集成
+## 2.思考与~~演进~~
 
-目前还是``CocoaPods``使用比较多，我们就来研究下使用``pod``集成模块化的流程。
+### 2.1 问题梳理
+
+通过对目前已有方式的分析以及自身对业务开发模式的理解，整理一下主要存在的两个问题：
+
+1. 减少字符串运用对开发过程的影响
+2. 尽可能减少开发时生成库数量
+
+2其实是1的解决方案，``target-selector``与``protocol``的方案解决了字符串问题，但是带来了2。开发过程中，基于开发效率的考虑，另一个公共库的维护一定会影响整体的开发效率，使得问题2也不得不需要找到解决方法。
+
+### 2.2 解决方案
+
+针对以上提出的问题，尝试解决一下：
+
+* 方案一 通过封装路由提供方法
+
+这个方案是改善路由地址填写的方式，由完全的路由地址改变为“模块 & 方法”，类似处理成``target-selector``方案。
+
+``` objective-c
+[Router open:@"myapp://homepage/detail"];
+
+[Router openModule:@"homepage" action:@"detail"];
+```
+
+* 方案二 打包时自动发布对外的``protocol``或是``category``
+
+模块仓库提供两个``podspec``，开发时对程序员无感，同步编写模块以及其对应公开文件，发布时分为两个``Pod``发布。
+
+### 2.3 持续集成
+
+目前还是``CocoaPods``使用比较多，我们就来研究下使用``Pod``集成模块化的流程。
 
 开发代码还是需要私有仓库，所以需要[私有的Pod仓库](https://guides.cocoapods.org/making/private-cocoapods.html)。
 
@@ -291,7 +320,6 @@ fi
 #开始找版本号
 ORIGIN_POD_VERSION=$(cat $APP_PATH | grep $PROJECT_NAME | grep -o '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*')
 CURRENT_POD_VERSION=$(cat $PROJECT_NAME.podspec | grep 's.version' | grep -o '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*')
-CURRENT_POD_URL=$(cat $PROJECT_NAME.podspec | grep 's.homepage' | grep -o "'.*'" | sed "s/'//g")
 
 echo "ORIGIN_POD_VALUE: $ORIGIN_POD_VERSION"
 echo "NEW_POD_VALUE: $CURRENT_POD_VERSION"
@@ -302,7 +330,7 @@ if [[ $ORIGIN_POD_VALUE ]]; then
 
 	sed -i "" "s/$ORIGIN_POD_VALUE/$NEW_POD_VALUE/g" $APP_PATH
 else
-	sed -i "" "/target 'VSNAPP-Swift' do/ a\\
+	sed -i "" "/target 'target-name' do/ a\\
 $NEW_POD_VALUE
 " $APP_PATH
 fi
@@ -315,12 +343,10 @@ cd $APP_NAME
 git config --get user.name 
 git config --get user.email
 git add Podfile
-git commit $COMMIT_LOG
+git commit -m $COMMIT_LOG
 git remote -v
 git push --set-upstream
 
 ```
 
 4.最后APP接受新代码时打包并上传至分发平台
-
-## 2.思考与~~演进~~
